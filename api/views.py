@@ -32,7 +32,7 @@ def movies():
     #append dictionary to movies [] with data: title and rating
     #movie_list here matches movie_list variable that was set for the db query 
     for movie in movie_list:
-        movies.append({'title' : movie.title, 'rating' : movie.rating})
+        movies.append({'title' : movie.title,'rating' : movie.rating})
 
     return jsonify({'movies' : movies})
 
