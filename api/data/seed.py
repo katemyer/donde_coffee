@@ -17,6 +17,9 @@ curs = conn.cursor()
 table_name = """DROP TABLE IF EXISTS User""" #actual sql command for if statement
 curs.execute(table_name) #actually execute command
 
+table_shop_name = """DROP TABLE IF EXISTS Shop""" #actual sql command for if statement
+curs.execute(table_shop_name) #actually execute command
+
 #create table
 #name text NOT NULL means required field
 create_table_sql = """ CREATE TABLE IF NOT EXISTS User (
@@ -25,7 +28,15 @@ create_table_sql = """ CREATE TABLE IF NOT EXISTS User (
                                         email text
                                     ); """
 
+create_shop_table_sql = """ CREATE TABLE IF NOT EXISTS Shop (
+                                        id integer PRIMARY KEY,
+                                        name text NOT NULL, 
+                                        address text,
+                                        hours text
+                                    ); """
+
 curs.execute(create_table_sql)
+curs.execute(create_shop_table_sql)
 
 reader = csv.reader(open(user_csv, 'r'), delimiter=',')
 next(reader, None)  # skip the headers
