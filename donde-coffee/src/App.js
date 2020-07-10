@@ -1,23 +1,24 @@
 import React, {useEffect, useState} from 'react';
 import logo from './logo.svg';
 import './App.css';
-import { Movies } from "./components/Movies";
+import { Users } from "./components/Users";
 
 function App() {
-  const [movies, setMovies] = useState([]);
+  const [users, setUsers] = useState([]);
 
+  // /GET /users for list of users
   useEffect(() => {
-    fetch('/movies').then(response =>
+    fetch('/users').then(response =>
       response.json().then(data => {
-      setMovies(data.movies);
+      setUsers(data.users);
     })
     );
   }, []);
-  console.log(movies);
+  console.log(users);
 
   return (
     <div className="App">
-  <Movies movies={movies} />
+  <Users users={users} />
     </div>
   );
 }
