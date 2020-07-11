@@ -39,4 +39,4 @@ def users():
 #index page
 @main.route('/', methods=['GET'])
 def home():
-    return "<h1>!Starbucks Coffee Shop App</h1><p>bunch of stuff here later</p>"
+    return "<h1>DONDE COFFEE! </h1><p>bunch of stuff here later</p>"
