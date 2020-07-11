@@ -9,17 +9,17 @@ main = Blueprint('main', __name__)
 
 @main.route('/add_user', methods=['POST'])
 def add_user():
-  user_data = request.get_json()
+    user_data = request.get_json()
 
-  #new User object
-  #name comes from user_data that's a json
-  #the key for name is 'name'
-  new_user = User(name=user_data['name'], email=user_data['email'])
+    #new User object
+    #name comes from user_data that's a json
+    #the key for name is 'name'
+    new_user = User(name=user_data['name'], email=user_data['email'])
 
-  db.session.add(new_user) #adding new user
-  db.session.commit() # .save in rails
+    db.session.add(new_user) #adding new user
+    db.session.commit() # .save in rails
 
-  return 'Done', 201
+    return 'Done', 201
 
 #GET /users
 #list all users
