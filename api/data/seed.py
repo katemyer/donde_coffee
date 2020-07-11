@@ -9,6 +9,7 @@ from sqlite3 import Error
 dirname = os.path.dirname(__file__)
 database = os.path.join(dirname, "../database.db")
 users_csv = os.path.join(dirname, "users.csv")
+shops_csv = os.path.join(dirname, "shops.csv")
 
 conn = sqlite3.connect(database)
 curs = conn.cursor()
@@ -28,21 +29,31 @@ create_users_table_sql = """ CREATE TABLE IF NOT EXISTS users (
                                         email text
                                     ); """
 
-# create_shop_table_sql = """ CREATE TABLE IF NOT EXISTS shops (
-#                                         id integer PRIMARY KEY,
-#                                         name text NOT NULL, 
-#                                         address text,
-#                                         hours text
-#                                     ); """
+create_shop_table_sql = """ CREATE TABLE IF NOT EXISTS shops (
+                                        id integer PRIMARY KEY,
+                                        name text NOT NULL, 
+                                        description text,
+                                        hours text,
+                                        address text,
+                                        phone text,
+                                        website text,
+                                        price_level text
+                                    ); """
 
 curs.execute(create_users_table_sql)
-# curs.execute(create_shop_table_sql)
+curs.execute(create_shop_table_sql)
 
 reader = csv.reader(open(users_csv, 'r'), delimiter=',')
 next(reader, None)  # skip the headers
 for row in reader:
     to_db = [row[0], row[1]] #2 columns
     curs.execute("INSERT INTO users (name, email) VALUES (?, ?);", to_db)
+
+reader = csv.reader(open(shops_csv, 'r'), delimiter=',')
+next(reader, None)  # skip the headers
+for row in reader:
+    to_db = [row[0], row[1],row[2],row[3],row[4],row[5],row[6]] #2 columns
+    curs.execute("INSERT INTO shops (name, description, hours, address, phone, website, price_level) VALUES (?, ?, ?, ?, ?, ?, ?);", to_db)
 
 conn.commit()
 conn.close()

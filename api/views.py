@@ -1,6 +1,7 @@
 from flask import Blueprint, jsonify, request
 from . import db # . looks in the __init__ file
 from .models import User #.models looks in models file
+from .models import Shop 
 
 main = Blueprint('main', __name__)
 
@@ -35,6 +36,21 @@ def users():
         users.append({'name' : user.name,'email' : user.email})
 
     return jsonify({'users' : users})
+
+#GET /shops
+#list all shops
+@main.route('/shops')
+def shops():
+    #sqlite query directly on class User, get all users
+    shop_list = Shop.query.all()
+    shops = []
+
+    #append dictionary to users [] with data: title and rating
+    #user_list here matches user_list variable that was set for the db query 
+    for shop in shop_list:
+        shops.append({'name' : shop.name,'description' : shop.description,'address' : shop.address, 'phone' : shop.phone, 'website' : shop.website,'price_level' : shop.price_level})
+
+    return jsonify({'shops' : shops})
 
 #index page
 @main.route('/', methods=['GET'])
