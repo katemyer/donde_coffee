@@ -28,7 +28,7 @@ def users():
     #sqlite query directly on class User, get all users
     user_list = User.query.all()
     users = []
-    
+
     #append dictionary to users [] with data: title and rating
     #user_list here matches user_list variable that was set for the db query 
     for user in user_list:
