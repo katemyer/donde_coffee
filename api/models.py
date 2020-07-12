@@ -1,13 +1,15 @@
+from flask_login import UserMixin
 from . import db  # import db object to inherent from class in __init__ file
 from datetime import datetime
 
 
-class User(db.Model):
+class User(UserMixin, db.Model):
   # table columns
   __tablename__ = 'users'
   id = db.Column(db.Integer, primary_key=True)
   name = db.Column(db.String(50))
   email = db.Column(db.String(50))
+  password = db.Column(db.String(8))
   # saved_shops = db.relationship('Post', backref='person', lazy=True)
 
   # def __repr__(self):    

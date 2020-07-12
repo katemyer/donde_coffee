@@ -1,7 +1,8 @@
-from flask import Blueprint, jsonify, request
+from flask import Blueprint, jsonify, request, render_template
 from . import db # . looks in the __init__ file
 from .models import User #.models looks in models file
-from .models import Shop 
+from .models import Shop
+from flask_login import login_required, current_user
 
 main = Blueprint('main', __name__)
 
@@ -53,6 +54,12 @@ def shops():
     return jsonify({'shops' : shops})
 
 #index page
-@main.route('/', methods=['GET'])
-def home():
-    return "<h1>DONDE COFFEE! </h1><p>bunch of stuff here later</p>"
+@main.route('/')
+def index():
+    # return "<h1>DONDE COFFEE! </h1><p>bunch of stuff here later</p>"
+    return render_template('index.html')
+
+@main.route('/profile')
+@login_required
+def profile():
+    return render_template('profile.html', name=current_user.name)
