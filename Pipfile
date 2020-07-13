@@ -9,6 +9,8 @@ verify_ssl = true
 flask = "*"
 flask-sqlalchemy = "*"
 pylint = "*"
+flask-login = "*"
+flask-migrate = "*"
 
 [requires]
 python_version = "3.8"
