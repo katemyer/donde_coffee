@@ -10,6 +10,7 @@ autopep8 = "*"
 flask = "*"
 flask-sqlalchemy = "*"
 pylint = "*"
+flask-cors = "*"
 
 [requires]
 python_version = "3.8"

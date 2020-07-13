@@ -1,11 +1,14 @@
-from flask import Blueprint, render_template, redirect, url_for, request, flash
+from flask import Blueprint, render_template, redirect, url_for, request, flash, jsonify, Response
 from werkzeug.security import generate_password_hash, check_password_hash
 from .models import User
 from . import db
 from flask_login import login_user, logout_user, login_required
 from .models import User
+# from flask_api import status
+# from flask_cors import CORS
 
 auth = Blueprint('auth', __name__)
+# CORS(auth)
 
 @auth.route('/login')
 def login():
@@ -34,16 +37,21 @@ def signup():
     return render_template('signup.html')
 
 @auth.route('/signup', methods=['POST'])
+# @cross_origin()
 def signup_post():
-    email = request.form.get('email')
-    name = request.form.get('name')
-    password = request.form.get('password')
+    # breakpoint()
+
+    request_json = request.json
+
+    email = request_json['user']['email']
+    name = request_json['user']['name']
+    password = request_json['user']['password']
 
     user = User.query.filter_by(email=email).first() # if this returns a user, then the email already exists in database
 
     if user: # if a user is found, we want to redirect back to signup page so user can try again
-        flash('Email address already exists')
-        return redirect(url_for('auth.signup'))
+        # return redirect(url_for('auth.signup'))
+        return Response("{'error':'user already exists'}", status=400, mimetype='application/json')
 
     # create a new user with the form data. Hash the password so the plaintext version isn't saved.
     new_user = User(email=email, name=name, password=generate_password_hash(password, method='sha256'))
@@ -52,7 +60,8 @@ def signup_post():
     db.session.add(new_user)
     db.session.commit()
 
-    return redirect(url_for('auth.login'))
+    # return redirect(url_for('auth.login'))
+    return Response("{'status':'ok'}", status=200, mimetype='application/json')
 
 @auth.route('/logout')
 @login_required
