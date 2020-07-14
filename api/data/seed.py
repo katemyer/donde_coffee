@@ -25,7 +25,7 @@ curs.execute(table_shop_name) #actually execute command
 #name text NOT NULL means required field
 create_users_table_sql = """ CREATE TABLE IF NOT EXISTS users (
                                         id integer PRIMARY KEY,
-                                        name text NOT NULL, 
+                                        name text, 
                                         email text,
                                         password text
                                     ); """
