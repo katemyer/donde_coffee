@@ -1,28 +1,20 @@
-https://blog.miguelgrinberg.com/post/the-flask-mega-tutorial-part-iv-database
 
-adding records to table
-1. get into the python shell
+from api import create_app
+app = create_app()
+app.app_context().push()
 
->>> from api import create_app
->>> app = create_app()
->>> app.app_context().push()
+from api import db
+from api.models import User, Post
+u = User(username='john', email='john@example.com')
+db.session.add(u)
+db.session.commit()
 
+#Query User Table
+users = User.query.all()
+users
 
->>> from api import db
->>> from api.models import User, Post
->>> u = User(username='john', email='john@example.com')
->>> db.session.add(u)
->>> db.session.commit()
-
-Query User Table
->>> users = User.query.all()
->>> users
-
->>> for u in users:
-...[tab]     print(u.id, u.username)
-...[enter]
-
-
+for u in users:
+  print(u.id, u.username)
 
 Now let's add a blog post:(adding a shop review)
 
