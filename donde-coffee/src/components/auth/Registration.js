@@ -32,7 +32,7 @@ export default class Registration extends Component {
       }
     },
     // MAKE SURE THIS NEXT LINE DOESN'T BREAK THINGS
-    { withCredentials: true }
+    // { withCredentials: true }
     ).then(response => {
       console.log('registration res', response);
     }).catch(error => {

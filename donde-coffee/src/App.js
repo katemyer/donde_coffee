@@ -3,7 +3,6 @@ import { BrowserRouter, Route, Link, withRouter, Switch } from 'react-router-dom
 import './App.css';
 import { Users } from "./components/Users";
 import { Shops } from "./components/Shops";
-import { LoginForm } from "./components/LoginForm";
 import { Container } from "semantic-ui-react"
 import Home from "./components/Home"
 import Dashboard from "./components/Dashboard"
