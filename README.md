@@ -7,5 +7,5 @@ We just want to find good coffee while we travel from Portland, OR to Vancouver,
 ### Backend: Python Flask API
 ### Frontend: React
 ### Local DB: SQLITE
-### Extermal DB: Trip Advisor
+### External DB: Yelp
 ### Coffee of choice during this capstone: All of the coffees
