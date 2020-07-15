@@ -1,1 +1,1 @@
-web: gunicorn donde_coffee:create_app()
+web: gunicorn api:donde_coffee
