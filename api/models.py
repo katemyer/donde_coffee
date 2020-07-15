@@ -8,7 +8,7 @@ class User(UserMixin, db.Model):
   name = db.Column(db.String(64), index=True, unique=True)
   username = db.Column(db.String(64), index=True, unique=True)
   email = db.Column(db.String(120), index=True, unique=True)
-  password_hash = db.Column(db.String(128))
+  password = db.Column(db.String(128))
   reviews = db.relationship('Review', backref='user', lazy='dynamic')
   favorites = db.relationship('Favorite', backref='user', lazy='dynamic')
 

@@ -13,11 +13,11 @@ db.session.commit()
 
 users = []
 
-u = User(name='charlie pie',username='charlie', email='charlie@example.com',password_hash='charlie123')
+u = User(name='charlie pie',username='charlie', email='charlie@example.com',password='charlie123')
 users.append(u)
-u = User(name='steve stevey',username='hiitsmesteve', email='steve@example.com',password_hash='steve4562')
+u = User(name='steve stevey',username='hiitsmesteve', email='steve@example.com',password='steve4562')
 users.append(u)
-u = User(name='surecan do',username='mochalatte', email='surecando@example.com',password_hash='surecandonothing56878')
+u = User(name='surecan do',username='mochalatte', email='surecando@example.com',password='surecandonothing56878')
 users.append(u)
 
 for user in users:
