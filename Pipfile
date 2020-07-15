@@ -10,6 +10,9 @@ autopep8 = "*"
 flask = "*"
 flask-sqlalchemy = "*"
 pylint = "*"
+flask-login = "*"
+flask-migrate = "*"
+flask-blueprint = "*"
 flask-cors = "*"
 
 [requires]

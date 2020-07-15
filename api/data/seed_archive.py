@@ -21,7 +21,10 @@ curs.execute(table_name) #actually execute command
 table_shop_name = """DROP TABLE IF EXISTS shops""" #actual sql command for if statement
 curs.execute(table_shop_name) #actually execute command
 
-#create table
+#TODO: don't need this because it is run in the init based on the models
+#
+
+#create table the MANUAL WAY
 #name text NOT NULL means required field
 create_users_table_sql = """ CREATE TABLE IF NOT EXISTS users (
                                         id integer PRIMARY KEY,
@@ -55,6 +58,9 @@ next(reader, None)  # skip the headers
 for row in reader:
     to_db = [row[0], row[1],row[2],row[3],row[4],row[5],row[6]] #2 columns
     curs.execute("INSERT INTO shops (name, description, hours, address, phone, website, price_level) VALUES (?, ?, ?, ?, ?, ?, ?);", to_db)
+
+    #TODO
+    #don't need the insert 
 
 conn.commit()
 conn.close()

@@ -4,6 +4,12 @@ from flask_login import LoginManager
 from flask_cors import CORS
 # from flask_api import status
 
+# from config import Config
+from flask_migrate import Migrate
+
+# app = Flask(__name__)
+# app.config.from_object(Config)
+# db = SQLAlchemy(app)
 db = SQLAlchemy() #don't pass anything bc initialize later
 
 def create_app():
@@ -11,9 +17,12 @@ def create_app():
     CORS(app)
     # cors = CORS(app, resources={r"/signup": {"origins": "http://localhost:3000"}})
     # app.config['CORS_HEADERS'] = 'Content-Type'
-    app.config['SECRET_KEY'] = 'secret-key-goes-here'
+    app.config['SECRET_KEY'] = 'db34ee5752b1bd504abb0bdd8da928d8'
+    #TODO: will just need to change this to POSTGRES
     app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///database.db'
     db.init_app(app) #initialize app here
+    migrate = Migrate(app, db)
+
     from .views import main
     app.register_blueprint(main)
     # blueprint for auth routes in our app
