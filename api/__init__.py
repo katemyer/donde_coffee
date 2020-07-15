@@ -19,6 +19,7 @@ def create_app():
     CORS(app)
     # cors = CORS(app, resources={r"/signup": {"origins": "http://localhost:3000"}})
     # app.config['CORS_HEADERS'] = 'Content-Type'
+    app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
     app.config['SECRET_KEY'] = 'db34ee5752b1bd504abb0bdd8da928d8'
     #TODO: will just need to change this to POSTGRES
     app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///database.db'
