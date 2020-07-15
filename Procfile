@@ -1,1 +1,1 @@
-web: gunicorn --chdir api __init__:app
+web: gunicorn api:donde_coffee
