@@ -1,1 +1,1 @@
-web: gunicorn api:donde_coffee
+web: gunicorn __init__:app
