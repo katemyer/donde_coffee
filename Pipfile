@@ -16,6 +16,7 @@ flask-blueprint = "*"
 flask-cors = "*"
 gunicorn = "*"
 psycopg2-binary = "*"
+yelpapi = "*"
 
 [requires]
 python_version = "3.8"
