@@ -4,6 +4,7 @@ url = "https://pypi.org/simple"
 verify_ssl = true
 
 [dev-packages]
+autopep8 = "*"
 
 [packages]
 flask = "*"
@@ -12,6 +13,7 @@ pylint = "*"
 flask-login = "*"
 flask-migrate = "*"
 flask-blueprint = "*"
+flask-cors = "*"
 
 [requires]
 python_version = "3.8"

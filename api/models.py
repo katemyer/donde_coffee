@@ -1,9 +1,9 @@
-print('__file__={0:<35} | __name__={1:<20} | __package__={2:<20}'.format(__file__,__name__,str(__package__)))
+# print('__file__={0:<35} | __name__={1:<20} | __package__={2:<20}'.format(__file__,__name__,str(__package__)))
 from . import db  # import db object to inherent from class in __init__ file
 from datetime import datetime
+from flask_login import UserMixin
 
-# UserMixin, 
-class User(db.Model):
+class User(UserMixin, db.Model):
   id = db.Column(db.Integer, primary_key=True)
   name = db.Column(db.String(64), index=True, unique=True)
   username = db.Column(db.String(64), index=True, unique=True)
