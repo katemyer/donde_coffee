@@ -20,7 +20,7 @@ def create_app():
     app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
     app.config['SECRET_KEY'] = 'db34ee5752b1bd504abb0bdd8da928d8'
     #TODO: will just need to change this to POSTGRES
-    app.config['SQLALCHEMY_DATABASE_URI'] = 'postgres://btsuvoxiobfgpe:f438b96451ee8c29892c77db3b5408941818de2b49cce2799112b707dd2fe695@ec2-34-225-82-212.compute-1.amazonaws.com:5432/df9eam8ii93hcd'
+    app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///database.db'
     db.init_app(app) #initialize app here
     migrate = Migrate(app, db)
 
