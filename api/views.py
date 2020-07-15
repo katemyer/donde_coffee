@@ -3,6 +3,7 @@ from . import db # . looks in the __init__ file
 from .models import User #.models looks in models file
 from .models import Shop
 from flask_login import login_required, current_user
+from . import yelp_api
 
 main = Blueprint('main', __name__)
 
@@ -50,6 +51,34 @@ def shops():
     #user_list here matches user_list variable that was set for the db query 
     for shop in shop_list:
         shops.append({'name' : shop.name,'description' : shop.description,'address' : shop.address, 'phone' : shop.phone, 'website' : shop.website,'price_level' : shop.price_level})
+
+    return jsonify({'shops' : shops})
+
+
+#GET /coffeeshops
+#list all yelp coffeeshops by me
+@main.route('/coffeeshops')
+def coffeeshops():
+    location = request.args.get('location')
+    #query yelp for coffe shops by me (location)
+    term = 'coffee'
+    #location = 'Seattle, WA'
+    search_limit = 10
+    response = yelp_api.search_query(term = term,
+                                 location = location,
+                                 limit = search_limit)
+    coffeeshops = response['businesses']
+
+    #append dictionary to users [] with data: title and rating
+    #user_list here matches user_list variable that was set for the db query 
+
+    shops =[]
+    for shop in coffeeshops:
+        shops.append({
+            'name' : shop['name'],
+            'address' : shop['location']['display_address'],
+            'phone' : shop['phone'], 
+            })
 
     return jsonify({'shops' : shops})
 

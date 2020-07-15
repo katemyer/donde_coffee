@@ -3,6 +3,7 @@ from flask_sqlalchemy import SQLAlchemy
 from flask_login import LoginManager
 from flask_cors import CORS
 # from flask_api import status
+from yelpapi import YelpAPI
 
 # from config import Config
 from flask_migrate import Migrate
@@ -11,6 +12,7 @@ from flask_migrate import Migrate
 # app.config.from_object(Config)
 # db = SQLAlchemy(app)
 db = SQLAlchemy() #don't pass anything bc initialize later
+yelp_api = YelpAPI('8g-yyEi_zD7gTsiEegmXWrTx-0_M8SBDkWrw-vVHzMbeI4IzToQjj57lNuzlvhCSDgUZZKiJfgbqmTDDGfQsxRzB8-F59cr_kSXrQ1mIztVn0YAAMQrIQTke0_YNX3Yx')
 
 def create_app():
     app = Flask(__name__)
@@ -32,6 +34,8 @@ def create_app():
     login_manager = LoginManager()
     login_manager.login_view = 'auth.login'
     login_manager.init_app(app)
+
+    
 
     from .models import User
 
