@@ -17,6 +17,8 @@ flask-cors = "*"
 gunicorn = "*"
 psycopg2-binary = "*"
 yelpapi = "*"
+flask-dotenv = "*"
+python-dotenv = "*"
 
 [requires]
 python_version = "3.8"

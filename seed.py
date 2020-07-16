@@ -2,6 +2,8 @@ print('__file__={0:<35} | __name__={1:<20} | __package__={2:<20}'.format(__file_
 from api import db
 from api.models import User,Shop,Review,Favorite
 from api import create_app
+from dotenv import load_dotenv
+load_dotenv('.env')
 
 app = create_app()
 app.app_context().push()
