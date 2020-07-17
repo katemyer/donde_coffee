@@ -55,7 +55,8 @@ def shops():
     return jsonify({'shops' : shops})
 
 
-#GET /coffeeshops
+#GET /coffeeshops?location=98055
+#GET /coffeeshops body: {location:98055}
 #list all yelp coffeeshops by me
 @main.route('/coffeeshops')
 def coffeeshops():
