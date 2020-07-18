@@ -61,12 +61,20 @@ def shops():
 def coffeeshops():
     location = request.args.get('location')
     #query yelp for coffe shops by me (location)
+    #synchronous call
     term = 'coffee'
-    #location = 'Seattle, WA'
-    search_limit = 10
+    search_limit = 30
+    radius = 16093
+    open_now = True
+    sort_by = 'rating'
+
     response = yelp_api.search_query(term = term,
                                  location = location,
-                                 limit = search_limit)
+                                 limit = search_limit,
+                                 radius = radius,
+                                 open_now = open_now,
+                                 sort_by = sort_by
+                                 )
     coffeeshops = response['businesses']
 
     #append dictionary to users [] with data: title and rating
@@ -74,10 +82,17 @@ def coffeeshops():
 
     shops =[]
     for shop in coffeeshops:
+        isPrice = False
+        if 'price' in shop:
+            isPrice = True
         shops.append({
+            'image_url' : shop['image_url'],
             'name' : shop['name'],
             'address' : shop['location']['display_address'],
             'phone' : shop['phone'], 
+            'rating' : shop['rating'],
+            'price' : shop['price'] if (isPrice) else '',
+            'distance' : shop['distance']
             })
 
     return jsonify({'shops' : shops})
