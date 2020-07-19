@@ -4,6 +4,11 @@ from .models import User #.models looks in models file
 from .models import Shop
 from flask_login import login_required, current_user
 from . import yelp_api
+from werkzeug.security import generate_password_hash, check_password_hash
+from flask_jwt_extended import (
+    JWTManager, jwt_required, create_access_token,
+    get_jwt_identity
+)
 
 main = Blueprint('main', __name__)
 
@@ -27,6 +32,9 @@ def add_user():
 #GET /users
 #list all users
 @main.route('/users')
+# applying requirement that you must have a valid token 
+# in order call this route
+@jwt_required
 def users():
     #sqlite query directly on class User, get all users
     user_list = User.query.all()
@@ -58,6 +66,9 @@ def shops():
 #GET /coffeeshops
 #list all yelp coffeeshops by me
 @main.route('/coffeeshops')
+#applying requirement for valid token
+# in order to search for coffee shops by location
+@jwt_required
 def coffeeshops():
     location = request.args.get('location')
     #query yelp for coffe shops by me (location)
@@ -118,3 +129,34 @@ def index():
 @login_required
 def profile():
     return render_template('profile.html', name=current_user.name)
+
+@main.route('/login2', methods=['POST'])
+def login():
+    if not request.is_json:
+        return jsonify({"msg": "Missing JSON in request"}), 400
+
+    username = request.json.get('username', None)
+    password = request.json.get('password', None)
+    if not username:
+        return jsonify({"msg": "Missing username parameter"}), 400
+    if not password:
+        return jsonify({"msg": "Missing password parameter"}), 400
+
+    user = User.query.filter_by(email=username).first()
+
+    #if user name and password are valid
+    # create token, this comes from library at very top
+    if (user and check_password_hash(user.password, password)):
+        token = create_access_token(identity=username,expires_delta=False)
+        return jsonify({'token' : token}), 200        
+        
+    
+    return jsonify({"msg": "Wrong password or username"}), 401
+
+
+@main.route('/protected', methods=['GET'])
+@jwt_required
+def protected():
+    # Access the identity of the current user with get_jwt_identity
+    current_user = get_jwt_identity()
+    return jsonify(logged_in_as=current_user), 200
