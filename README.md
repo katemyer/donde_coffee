@@ -14,14 +14,14 @@ We just want to find good coffee while we travel from Portland, OR to Vancouver,
 ## Kind of do not recommend using Flask with React. Deployment was V difficult as well.
 ## Disclosure: Got LOTS of help from senior level mentors to do this.
 
-https://flask-jwt-extended.readthedocs.io/en/stable/basic_usage/
-https://flask-jwt-extended.readthedocs.io/en/stable/api/
-https://codeburst.io/jwt-authorization-in-flask-c63c1acf4eeb
-https://realpython.com/token-based-authentication-with-flask/
-https://github.com/mskcc-clinbx/python-jwt-react-login-flow/search?q=getToken&unscoped_q=getToken
-https://github.com/yogupta/react-flask-login
-https://realpython.com/token-based-authentication-with-flask/#jwt-setup
-https://github.com/yogupta/react-flask-login/search?q=token&unscoped_q=token
+### https://flask-jwt-extended.readthedocs.io/en/stable/basic_usage/
+### https://flask-jwt-extended.readthedocs.io/en/stable/api/
+### https://codeburst.io/jwt-authorization-in-flask-c63c1acf4eeb
+### https://realpython.com/token-based-authentication-with-flask/
+### https://github.com/mskcc-clinbx/python-jwt-react-login-flow/search?q=getToken&unscoped_q=getToken
+### https://github.com/yogupta/react-flask-login
+### https://realpython.com/token-based-authentication-with-flask/#jwt-setup
+### https://github.com/yogupta/react-flask-login/search?q=token&unscoped_q=token
 https://www.digitalocean.com/community/tutorials/how-to-add-authentication-to-your-app-with-flask-login#step-9-%E2%80%94-adding-the-login-method
 https://pythonbasics.org/flask-login/
 https://stackoverflow.com/questions/30150626/flask-login-user-is-set-to-anonymous-after-login
