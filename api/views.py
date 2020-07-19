@@ -40,7 +40,7 @@ def users():
     return jsonify({'users' : users})
 
 #GET /shops
-#list all shops
+#list all shops from db
 @main.route('/shops')
 def shops():
     #sqlite query directly on class User, get all users
@@ -80,12 +80,14 @@ def coffeeshops():
     #append dictionary to users [] with data: title and rating
     #user_list here matches user_list variable that was set for the db query 
 
+    #info passing back to react side
     shops =[]
     for shop in coffeeshops:
         isPrice = False
         if 'price' in shop:
             isPrice = True
         shops.append({
+            'id' : shop['id'],
             'image_url' : shop['image_url'],
             'name' : shop['name'],
             'address' : shop['location']['display_address'],
@@ -95,7 +97,16 @@ def coffeeshops():
             'distance' : shop['distance']
             })
 
-    return jsonify({'shops' : shops})
+    return jsonify({'coffeeshops' : shops})
+
+#query to get shop id = {id}
+#/GET https://api.yelp.com/v3/businesses/{id}
+@main.route('/coffeeshops/<id>')
+def shop_details(id):
+    print(id)
+    response = yelp_api.business_query(id=id)
+    shop_details = response
+    return jsonify({'coffeeshops' : shop_details})
 
 #index page
 @main.route('/')
