@@ -8,6 +8,12 @@ from yelpapi import YelpAPI
 # from config import Config
 from flask_migrate import Migrate
 
+from flask_jwt_extended import (
+    JWTManager, jwt_required, create_access_token,
+    get_jwt_identity
+)
+
+
 # app = Flask(__name__)
 # app.config.from_object(Config)
 # db = SQLAlchemy(app)
@@ -37,6 +43,8 @@ def create_app():
     login_manager.init_app(app)
 
     
+    app.config['JWT_SECRET_KEY'] = 'my-super-secret-flask-key'  # Change this!
+    jwt = JWTManager(app)
 
     from .models import User
 

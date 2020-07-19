@@ -6,6 +6,12 @@ from flask_login import login_user, logout_user, login_required
 from .models import User
 # from flask_api import status
 # from flask_cors import CORS
+from flask_jwt_extended import (
+    JWTManager, jwt_required, create_access_token,
+    get_jwt_identity
+)
+import json
+
 
 auth = Blueprint('auth', __name__)
 # CORS(auth)
@@ -60,13 +66,17 @@ def signup_post():
 
     # create a new user with the form data. Hash the password so the plaintext version isn't saved.
     new_user = User(email=email, name=name, password=generate_password_hash(password, method='sha256'))
-
+    token = create_access_token(identity=email,expires_delta=False)
+    response = json.dumps({
+        'token' : token, 
+        'status' : 'ok'
+    })
     # add the new user to the database
     db.session.add(new_user)
     db.session.commit()
 
     # return redirect(url_for('auth.login'))
-    return Response("{'status':'ok'}", status=200, mimetype='application/json')
+    return Response(response, status=200, mimetype='application/json')
 
 @auth.route("/users")
 def users():
