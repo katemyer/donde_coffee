@@ -1,6 +1,6 @@
 from flask import Blueprint, jsonify, request, render_template
 from . import db # . looks in the __init__ file
-from .models import User #.models looks in models file
+from .models import User, Favorite #.models looks in models file
 from .models import Shop
 from flask_login import login_required, current_user
 from . import yelp_api
@@ -63,7 +63,7 @@ def shops():
     return jsonify({'shops' : shops})
 
 
-#GET /coffeeshops
+#GET /coffeeshops?location=98055
 #list all yelp coffeeshops by me
 @main.route('/coffeeshops')
 #applying requirement for valid token
@@ -160,3 +160,28 @@ def protected():
     # Access the identity of the current user with get_jwt_identity
     current_user = get_jwt_identity()
     return jsonify(logged_in_as=current_user), 200
+
+# GET /favorites/2
+# Get the favorites shops based on the user_id
+@main.route('/favorites/<user_id>', methods=['GET'])
+def favorties(user_id):
+    print('favorites')
+
+    # Check if user exist, use this user instead
+    # current_user = get_jwt_identity()
+    # if current_user:
+    #      user_id = current_user.id
+        
+    # get user favorites from DB
+    userFavorites = Favorite.query.filter_by(user_id=user_id).all()
+    formattedFavorites = []
+
+    for f in userFavorites:
+        formattedFavorites.append(f.shop_id)
+
+    # {
+    #     'favorites' : [shopid1, shop2, shopid3]
+    # }
+    
+    # return list of favorite shop_id (should be same as yelpIDs)
+    return jsonify({ 'favorited_shop_ids' : formattedFavorites}), 200
