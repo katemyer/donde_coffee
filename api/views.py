@@ -185,3 +185,47 @@ def favorties(user_id):
     
     # return list of favorite shop_id (should be same as yelpIDs)
     return jsonify({ 'favorited_shop_ids' : formattedFavorites}), 200
+
+# POST /togglefavorite?user_id=1&shop_id=2
+# Toggle favorte/unfavorite for the user/shop combination
+@main.route('/togglefavorite', methods=['POST'])
+def togglefavorite():
+    print('togglefavorites')
+    user_id = request.args.get('user_id')
+    shop_id = request.args.get('shop_id')
+    # Check if user exist, use this user instead
+    # current_user = get_jwt_identity()
+    # if current_user:
+    #      user_id = current_user.id
+        
+    # get user favorites from DB
+    usershopFavorite = Favorite.query.filter_by(user_id=user_id, shop_id=shop_id).first()
+
+    action = 'favorited'
+    # user shop record exists, then we want to remove it and vice versa
+    if usershopFavorite:
+        #toggle it to not favorite by removing the record
+        print('deleting record')
+        action = 'unfavorited'
+        db.session.delete(usershopFavorite)
+        db.session.commit()
+    else:
+        print('adding record')
+        usershopFavorite = Favorite(user_id=user_id,shop_id=shop_id)
+        db.session.add(usershopFavorite)
+        db.session.commit()
+    
+    
+
+    result = {
+        'action' : action,
+        'user_id': user_id,
+        'shop_id' : shop_id
+    }
+
+    # {
+    #     'favorites' : [shopid1, shop2, shopid3]
+    # }
+    
+    # return list of favorite shop_id (should be same as yelpIDs)
+    return jsonify({ 'toggledfavorite' : result}), 200
