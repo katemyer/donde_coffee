@@ -147,7 +147,7 @@ def login():
     #if user name and password are valid
     # create token, this comes from library at very top
     if (user and check_password_hash(user.password, password)):
-        token = create_access_token(identity=username,expires_delta=False)
+        token = create_access_token(identity=user.id,expires_delta=False)
         return jsonify({'token' : token}), 200        
         
     
@@ -164,13 +164,15 @@ def protected():
 # GET /favorites/2
 # Get the favorites shops based on the user_id
 @main.route('/favorites/<user_id>', methods=['GET'])
+@jwt_required
 def favorties(user_id):
     print('favorites')
 
     # Check if user exist, use this user instead
-    # current_user = get_jwt_identity()
-    # if current_user:
-    #      user_id = current_user.id
+
+    current_user_id = get_jwt_identity()
+    if current_user_id:
+        user_id = current_user_id
         
     # get user favorites from DB
     userFavorites = Favorite.query.filter_by(user_id=user_id).all()
@@ -189,16 +191,29 @@ def favorties(user_id):
 # POST /togglefavorite?user_id=1&shop_id=2
 # Toggle favorte/unfavorite for the user/shop combination
 @main.route('/togglefavorite', methods=['POST'])
+@jwt_required
 def togglefavorite():
     print('togglefavorites')
-    user_id = request.args.get('user_id')
-    shop_id = request.args.get('shop_id')
+    user_id = request.json.get('user_id')
+    shop_id = request.json.get('shop_id')
+    # user_id = request.args.get('user_id')
+    # shop_id = request.args.get('shop_id')
     # Check if user exist, use this user instead
-    # current_user = get_jwt_identity()
-    # if current_user:
-    #      user_id = current_user.id
+    current_user_id = get_jwt_identity()
+    if current_user_id:
+        user_id = current_user_id
         
     # get user favorites from DB
+
+    # check if user_id and shop_id are filled correctly
+    if not user_id or not shop_id:
+        result = {
+            'action' : "Did nothing",
+            'user_id': user_id,
+            'shop_id' : shop_id
+        }  
+        return jsonify({ 'toggledfavorite' : result}), 404
+    
     usershopFavorite = Favorite.query.filter_by(user_id=user_id, shop_id=shop_id).first()
 
     action = 'favorited'
@@ -214,9 +229,7 @@ def togglefavorite():
         usershopFavorite = Favorite(user_id=user_id,shop_id=shop_id)
         db.session.add(usershopFavorite)
         db.session.commit()
-    
-    
-
+ 
     result = {
         'action' : action,
         'user_id': user_id,

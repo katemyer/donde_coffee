@@ -66,7 +66,7 @@ def signup_post():
 
     # create a new user with the form data. Hash the password so the plaintext version isn't saved.
     new_user = User(email=email, name=name, password=generate_password_hash(password, method='sha256'))
-    token = create_access_token(identity=email,expires_delta=False)
+    token = create_access_token(identity=user.id,expires_delta=False)
     response = json.dumps({
         'token' : token, 
         'status' : 'ok'
