@@ -148,7 +148,7 @@ def login():
     # create token, this comes from library at very top
     if (user and check_password_hash(user.password, password)):
         token = create_access_token(identity=user.id,expires_delta=False)
-        return jsonify({'token' : token}), 200        
+        return jsonify({'token' : token, 'user_id': user.id}), 200        
         
     
     return jsonify({"msg": "Wrong password or username"}), 401
