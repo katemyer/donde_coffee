@@ -65,15 +65,19 @@ def signup_post():
         return Response("{'error':'user already exists'}", status=400, mimetype='application/json')
 
     # create a new user with the form data. Hash the password so the plaintext version isn't saved.
-    new_user = User(email=email, name=name, password=generate_password_hash(password, method='sha256'))
+    user = User(email=email, name=name, password=generate_password_hash(password, method='sha256'))
+    # add the new user to the database
+    db.session.add(user)
+    db.session.commit()
+
+
     token = create_access_token(identity=user.id,expires_delta=False)
     response = json.dumps({
         'token' : token, 
+        'user_id': user.id,
         'status' : 'ok'
     })
-    # add the new user to the database
-    db.session.add(new_user)
-    db.session.commit()
+
 
     # return redirect(url_for('auth.login'))
     return Response(response, status=200, mimetype='application/json')
