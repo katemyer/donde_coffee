@@ -1,6 +1,6 @@
 from flask import Blueprint, jsonify, request, render_template
 from . import db # . looks in the __init__ file
-from .models import User #.models looks in models file
+from .models import User, Favorite #.models looks in models file
 from .models import Shop
 from flask_login import login_required, current_user
 from . import yelp_api
@@ -63,7 +63,7 @@ def shops():
     return jsonify({'shops' : shops})
 
 
-#GET /coffeeshops
+#GET /coffeeshops?location=98055
 #list all yelp coffeeshops by me
 @main.route('/coffeeshops')
 #applying requirement for valid token
@@ -147,7 +147,7 @@ def login():
     #if user name and password are valid
     # create token, this comes from library at very top
     if (user and check_password_hash(user.password, password)):
-        token = create_access_token(identity=username,expires_delta=False)
+        token = create_access_token(identity=user.id,expires_delta=False)
         return jsonify({'token' : token}), 200        
         
     
@@ -160,3 +160,85 @@ def protected():
     # Access the identity of the current user with get_jwt_identity
     current_user = get_jwt_identity()
     return jsonify(logged_in_as=current_user), 200
+
+# GET /favorites/2
+# Get the favorites shops based on the user_id
+@main.route('/favorites/<user_id>', methods=['GET'])
+@jwt_required
+def favorties(user_id):
+    print('favorites')
+
+    # Check if user exist, use this user instead
+
+    current_user_id = get_jwt_identity()
+    if current_user_id:
+        user_id = current_user_id
+        
+    # get user favorites from DB
+    userFavorites = Favorite.query.filter_by(user_id=user_id).all()
+    formattedFavorites = []
+
+    for f in userFavorites:
+        formattedFavorites.append(f.shop_id)
+
+    # {
+    #     'favorites' : [shopid1, shop2, shopid3]
+    # }
+    
+    # return list of favorite shop_id (should be same as yelpIDs)
+    return jsonify({ 'favorited_shop_ids' : formattedFavorites}), 200
+
+# POST /togglefavorite?user_id=1&shop_id=2
+# Toggle favorte/unfavorite for the user/shop combination
+@main.route('/togglefavorite', methods=['POST'])
+@jwt_required
+def togglefavorite():
+    print('togglefavorites')
+    user_id = request.json.get('user_id')
+    shop_id = request.json.get('shop_id')
+    # user_id = request.args.get('user_id')
+    # shop_id = request.args.get('shop_id')
+    # Check if user exist, use this user instead
+    current_user_id = get_jwt_identity()
+    if current_user_id:
+        user_id = current_user_id
+        
+    # get user favorites from DB
+
+    # check if user_id and shop_id are filled correctly
+    if not user_id or not shop_id:
+        result = {
+            'action' : "Did nothing",
+            'user_id': user_id,
+            'shop_id' : shop_id
+        }  
+        return jsonify({ 'toggledfavorite' : result}), 404
+    
+    usershopFavorite = Favorite.query.filter_by(user_id=user_id, shop_id=shop_id).first()
+
+    action = 'favorited'
+    # user shop record exists, then we want to remove it and vice versa
+    if usershopFavorite:
+        #toggle it to not favorite by removing the record
+        print('deleting record')
+        action = 'unfavorited'
+        db.session.delete(usershopFavorite)
+        db.session.commit()
+    else:
+        print('adding record')
+        usershopFavorite = Favorite(user_id=user_id,shop_id=shop_id)
+        db.session.add(usershopFavorite)
+        db.session.commit()
+ 
+    result = {
+        'action' : action,
+        'user_id': user_id,
+        'shop_id' : shop_id
+    }
+
+    # {
+    #     'favorites' : [shopid1, shop2, shopid3]
+    # }
+    
+    # return list of favorite shop_id (should be same as yelpIDs)
+    return jsonify({ 'toggledfavorite' : result}), 200

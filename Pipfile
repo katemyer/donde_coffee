@@ -18,6 +18,7 @@ gunicorn = "*"
 psycopg2-binary = "*"
 yelpapi = "*"
 flask-jwt-extended = "*"
+python-dotenv = "*"
 
 [requires]
 python_version = "3.8"
