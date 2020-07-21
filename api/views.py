@@ -1,7 +1,7 @@
 from flask import Blueprint, jsonify, request, render_template
 from . import db # . looks in the __init__ file
 from .models import User, Favorite #.models looks in models file
-from .models import Shop
+from .models import Shop, Review
 from flask_login import login_required, current_user
 from . import yelp_api
 from werkzeug.security import generate_password_hash, check_password_hash
@@ -212,7 +212,7 @@ def togglefavorite():
             'user_id': user_id,
             'shop_id' : shop_id
         }  
-        return jsonify({ 'toggledfavorite' : result}), 404
+        return jsonify({ 'toggledfavorite' : result}), 400
     
     usershopFavorite = Favorite.query.filter_by(user_id=user_id, shop_id=shop_id).first()
 
@@ -242,3 +242,106 @@ def togglefavorite():
     
     # return list of favorite shop_id (should be same as yelpIDs)
     return jsonify({ 'toggledfavorite' : result}), 200
+
+#*******************GETTING REVIEWS BY SHOPS ***********************#
+# Get the reviews based on the shop_id
+@main.route('/shopreviews/<shop_id>', methods=['GET'])
+# @jwt_required
+def shopReviews(shop_id):
+    print('shopreviews')
+
+    # Check if user exist, use this user instead
+    # current_user_id = get_jwt_identity()
+    # if current_user_id:
+    #     user_id = current_user_id
+        
+    # get user reviews from DB
+    shopReviews = Review.query.filter_by(shop_id=shop_id).all()
+    formattedReviews = []
+
+    for r in shopReviews:
+        reviewhash = {
+            'user_id' : r.user_id,
+            'user_email' : r.user.email,
+            'user_name' : r.user.name,
+            'shop_id' : r.shop_id,
+            'body' : r.body
+        }
+        formattedReviews.append(reviewhash)
+    
+    # return list of reviews by shop_id (should be same as yelpIDs)
+    return jsonify({ 'shopReviews' : formattedReviews}), 200
+
+#*******************GETTING REVIEWS BY USER ***********************#
+# GET /reviews/2
+# Get the reviews based on the user by grabbing their token
+@main.route('/userreviews/', methods=['GET'])
+#turning on protection to get the token
+@jwt_required
+def userReviews():
+    print('userreviews')
+
+    # Check if user exist, use this user instead
+    user_id = get_jwt_identity()
+ 
+    # get user reviews from DB
+    userReviews = Review.query.filter_by(user_id=user_id).all()
+    formattedReviews = []
+
+    for r in userReviews:
+        reviewhash = {
+            'user_id' : r.user_id,
+            'user_email' : r.user.email,
+            'user_name' : r.user.name,
+            'shop_id' : r.shop_id,
+            'body' : r.body
+        }
+        formattedReviews.append(reviewhash)
+    
+    # return list of reviews by shop_id (should be same as yelpIDs)
+    return jsonify({ 'userReviews' : formattedReviews}), 200
+
+#*******************POSTING REVIEWS***********************#
+# POST /reviews {user_id: 1, shop_id:hdaksdh, body: "loved it"}
+@main.route('/review', methods=['POST'])
+@jwt_required
+def postReview():
+    print('postingreviews')
+    # user_id = request.json.get('user_id') : going to use token instead of this
+    shop_id = request.json.get('shop_id')
+    body = request.json.get('body')
+  
+    # Check if user exist, use this user's token instead
+    user_id = None
+    current_user_id = get_jwt_identity()
+    if current_user_id:
+        user_id = current_user_id
+        
+    # get reviews from DB
+    # check if user_id and shop_id are filled correctly
+    if not user_id or not shop_id or not body:
+        result = {
+            'action' : "Did nothing",
+            'user_id': user_id,
+            'shop_id' : shop_id,
+            'body' : body
+        }  
+        return jsonify({ 'postReview' : result}), 400
+    
+    
+    action = 'posting review'
+    # user shop record exists, then we want to remove it and vice versa
+      
+    print('adding review')
+    usershopReview = Review(user_id=user_id,shop_id=shop_id,body=body)
+    db.session.add(usershopReview)
+    db.session.commit()
+ 
+    result = {
+        'action' : action,
+        'user_id': user_id,
+        'shop_id' : shop_id
+    }
+ 
+    # return list of reviews 
+    return jsonify({ 'postReview' : result}), 200
