@@ -260,17 +260,19 @@ def shopReviews(shop_id):
     formattedReviews = []
 
     for r in shopReviews:
+        response = yelp_api.business_query(id=r.shop_id)
         reviewhash = {
             'user_id' : r.user_id,
             'user_email' : r.user.email,
             'user_name' : r.user.name,
             'shop_id' : r.shop_id,
+            'shop_name' : response['name'],
             'body' : r.body
         }
         formattedReviews.append(reviewhash)
     
     # return list of reviews by shop_id (should be same as yelpIDs)
-    return jsonify({ 'shopReviews' : formattedReviews}), 200
+    return jsonify({ 'reviews' : formattedReviews}), 200
 
 #*******************GETTING REVIEWS BY USER ***********************#
 # GET /reviews/2
@@ -285,21 +287,24 @@ def userReviews():
     user_id = get_jwt_identity()
  
     # get user reviews from DB
-    userReviews = Review.query.filter_by(user_id=user_id).all()
+    userReviews = Review.query.filter_by(user_id=user_id).all()    
     formattedReviews = []
 
     for r in userReviews:
+        response = yelp_api.business_query(id=r.shop_id)
+    
         reviewhash = {
             'user_id' : r.user_id,
             'user_email' : r.user.email,
             'user_name' : r.user.name,
             'shop_id' : r.shop_id,
+            'shop_name' : response['name'],
             'body' : r.body
         }
         formattedReviews.append(reviewhash)
     
     # return list of reviews by shop_id (should be same as yelpIDs)
-    return jsonify({ 'userReviews' : formattedReviews}), 200
+    return jsonify({ 'reviews' : formattedReviews}), 200
 
 #*******************POSTING REVIEWS***********************#
 # POST /reviews {user_id: 1, shop_id:hdaksdh, body: "loved it"}
