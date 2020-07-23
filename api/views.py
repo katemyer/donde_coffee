@@ -267,6 +267,7 @@ def shopReviews(shop_id):
             'user_name' : r.user.name,
             'shop_id' : r.shop_id,
             'shop_name' : response['name'],
+            'image_url' : response['image_url'],
             'body' : r.body
         }
         formattedReviews.append(reviewhash)
@@ -299,6 +300,7 @@ def userReviews():
             'user_name' : r.user.name,
             'shop_id' : r.shop_id,
             'shop_name' : response['name'],
+            'image_url' : response['image_url'],
             'body' : r.body
         }
         formattedReviews.append(reviewhash)
